@@ -4,19 +4,18 @@ metadata:
   name: edu-user-deployment
   namespace: edu-user
 spec:
+  replicas: 1   # HPA로 동적으로 관리될 예정
   selector:
     matchLabels:
-      app: k8s-edu-app
-  replicas: 1   # HPA로 동적으로 관리될 예정
+      app: edu-user
   template:
     metadata:
       labels:
         app: edu-user
-        version: blue
     spec:
       containers:
-        - name: k8s-edu-app
-          image: seongjaegreen/k8s-edu:v0.0.1
+        - name: edu-user-app
+          image: seongjaegreen/edu-user:v0.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

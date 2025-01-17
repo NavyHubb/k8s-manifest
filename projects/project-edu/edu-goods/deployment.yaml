@@ -14,20 +14,23 @@ spec:
         app: edu-goods
     spec:
       containers:
-        - name: k8s-edu-app
-          image: seongjaegreen/k8s-edu:v0.0.1
+        - name: edu-goods-app
+          image: seongjaegreen/edu-goods:v0.0.1
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+              protocol: TCP
           envFrom:
             - configMapRef:
                 name: edu-goods-config
           resources:
             requests:
               cpu: "1"
-              memory: "1Gi"
+              memory: "2Gi"
             limits:
               cpu: "1"
-              memory: "1Gi"
+              memory: "2Gi"
           livenessProbe:
             httpGet:
               path: /
