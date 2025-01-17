@@ -2,17 +2,25 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: edu-apps  # 상위 애플리케이션 이름
-  namespace: argocd
+  namespace: argocd  # ArgoCD가 설치된 네임스페이스
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/project-edu'  # Git 레포지토리 URL
+    repoURL: 'https://github.com/NavyHubb/k8s-manifest/tree/main/projects/project-edu'  # Git 레포지토리 URL
     targetRevision: HEAD  # 브랜치 이름 (HEAD, main 등)
-    path: .  # 현재 레포지토리 루트를 기준으로 하위 경로를 탐색
+    path: .  # 현재 디렉토리 기준으로 하위 애플리케이션을 찾음
   destination:
-    server: 'https://kubernetes.default.svc'  # Kubernetes API 서버 주소
-    namespace: default  # 기본 네임스페이스
+    server: 'https://kubernetes.default.svc'  # Kubernetes API 서버
+    namespace: argocd  # 상위 애플리케이션이 속한 네임스페이스
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: true  # 리소스가 삭제되면 동기화 상태에서 제거
+      selfHeal: true  # 리소스 상태를 지속적으로 모니터링하고 복구
+  # 하위 애플리케이션 정의
+  sources:
+    - repoURL: 'https://github.com/NavyHubb/k8s-manifest/tree/main/projects/project-edu'
+      targetRevision: HEAD
+      path: edu-user
+    - repoURL: 'https://github.com/NavyHubb/k8s-manifest/tree/main/projects/project-edu'
+      targetRevision: HEAD
+      path: edu-goods
