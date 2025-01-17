@@ -1,21 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: edu-apps
+  name: edu-apps  # 상위 애플리케이션 이름
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/NavyHubb/k8s-manifest.git'
-    targetRevision: HEAD
-    path: /projects/project-edu
+    repoURL: 'https://github.com/your-org/project-edu'  # Git 레포지토리 URL
+    targetRevision: HEAD  # 브랜치 이름 (HEAD, main 등)
+    path: .  # 현재 레포지토리 루트를 기준으로 하위 경로를 탐색
   destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: default
+    server: 'https://kubernetes.default.svc'  # Kubernetes API 서버 주소
+    namespace: default  # 기본 네임스페이스
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-  sources:
-    - path: edu-user  # edu-user Application
-    - path: edu-goods # edu-goods Application
