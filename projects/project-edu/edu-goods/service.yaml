@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: edu-goods-service
+  namespace: edu-goods
+spec:
+  selector:
+    app: edu-goods
+  ports:
+    - protocol: TCP
+      port: 80       # edu-goods의 Service가 노출하는 포트
+      targetPort: 80 # edu-goods Pod에서 사용하는 컨테이너 포트
+  type: ClusterIP

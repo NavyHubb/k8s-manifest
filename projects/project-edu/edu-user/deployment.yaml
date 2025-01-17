@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edu-user-deployment
+  namespace: edu-user
+spec:
+  selector:
+    matchLabels:
+      app: k8s-edu-app
+  replicas: 1   # HPA로 동적으로 관리될 예정
+  template:
+    metadata:
+      labels:
+        app: edu-user
+        version: blue
+    spec:
+      containers:
+        - name: k8s-edu-app
+          image: seongjaegreen/k8s-edu:v0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          envFrom:                             # 환경변수
+            - configMapRef:
+                name: edu-user-config
+          resources:                           # pod 사용 리소스 설정 블록
+            requests:                          # 생성시 필요한 최소 리소스
+              cpu: "1"
+              memory: "2Gi"
+            limits:                            # pod가 사용 가능한 최대 리소스
+              cpu: "1"
+              memory: "2Gi"
+          livenessProbe:            # Liveness Probe 설정
+            httpGet:
+              path: /               # "/" 호출로 상태 확인
+              port: 80
+            initialDelaySeconds: 5  # 컨테이너 시작 후 5초 뒤부터 체크
+            periodSeconds: 10       # 10초마다 상태 확인
+            failureThreshold: 3     # 3번 실패 시 Pod 재시작
+      imagePullSecrets:
+        - name: dockerhub-secret

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: edu-goods-ingress
+  namespace: edu-goods
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: edu-goods.211.254.214.68.sslip.io
+      http:
+        paths:
+          - path: /{goodsNo}
+            pathType: Prefix
+            backend:
+              service:
+                name: edu-goods-service
+                port:
+                  number: 80
